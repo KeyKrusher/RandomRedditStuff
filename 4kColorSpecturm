@@ -1,0 +1,26 @@
+// Code written by Dale Thomas
+// This code generates a 4k image of all the possible colours that it can.
+#include <stdio.h>
+#include <stdint.h>
+#include <math.h>
+#include <vector>
+#include <fstream>
+ 
+const int WIDTH = 3840;
+const int HEIGHT = 2160;
+ 
+int main() {
+	const short header[] = {0,2,0,0,0,0,WIDTH,HEIGHT,24};	
+	std::ofstream out_file("pixels.tga",std::ios::binary);
+	out_file.write((const char*)header,18);
+	std::vector<uint8_t> pixels(WIDTH*HEIGHT*3);
+	for(int j=0,i=0; i<WIDTH*HEIGHT; ++i) {
+		const unsigned long index = i;//+WIDTH*HEIGHT*2;
+		pixels[j++] = (index)&0XFF;
+		pixels[j++] = (index>>8)&0XFF;
+		pixels[j++] = (index>>16)&0XFF;
+	}
+	out_file.write((const char*)pixels.data(),WIDTH*HEIGHT*3);
+	out_file.close();
+	return 0;
+}
